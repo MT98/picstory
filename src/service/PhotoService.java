@@ -11,7 +11,7 @@ import entities.Album;
 import entities.Photo;
 import entities.Utilisateur;
 
-@Stateless
+
 public class PhotoService {
 	
 	@PersistenceContext

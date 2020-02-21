@@ -10,7 +10,7 @@ import javax.persistence.Query;
 import entities.Album;
 import entities.Utilisateur;
 
-@Stateless
+
 public class AlbumService {
 	
 	@PersistenceContext

@@ -18,12 +18,17 @@ import javax.validation.constraints.NotNull;
 @Entity
 @NamedQueries({
     @NamedQuery(name="Album.findAllOwned",
-                query="SELECT a FROM Album a WHERE a.owner=:owner"),
+                query="SELECT a FROM Album a WHERE a.proprietaire=:owner"),
     @NamedQuery(name="Album.findAlbumSharedWith",
-				query="SELECT a FROM Album a WHERE :sharedWith MEMBER OF a.sharedWith"),
+				query="SELECT a FROM Album a WHERE :sharedWith MEMBER OF a.partageAvec"),
 })
 public class Album implements Serializable {
-	
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
@@ -35,7 +40,7 @@ public class Album implements Serializable {
 	
 	@NotNull
 	@ManyToOne
-	private Utilisateur propietaire;
+	private Utilisateur proprietaire;
 	
 	@OneToMany(mappedBy="album", cascade=CascadeType.ALL)
 	private List<Photo> photos;
@@ -68,11 +73,11 @@ public class Album implements Serializable {
 	}
 
 	public Utilisateur getProprietaire() {
-		return propietaire;
+		return proprietaire;
 	}
 
 	public void setOwner(Utilisateur proprietaire) {
-		this.propietaire = proprietaire;
+		this.proprietaire = proprietaire;
 	}
 
 	public List<Photo> getPhotos() {
@@ -94,8 +99,8 @@ public class Album implements Serializable {
 	protected Album() {
 	}
 	
-	public Album(Utilisateur propietaire) {
-		this.propietaire=propietaire;
+	public Album(Utilisateur proprietaire) {
+		this.proprietaire=proprietaire;
 	}
 
 }

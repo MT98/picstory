@@ -3,6 +3,7 @@ package controller;
 import java.io.IOException;
 
 import javax.ejb.EJB;
+import javax.inject.Inject;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -26,7 +27,7 @@ public class UtilisateurController extends HttpServlet {
 
 	private static final String				VUE_LIST_USER	= "/WEB-INF/listUsers.jsp";
 
-	@EJB
+	@Inject
 	private UtilisateurService utilisateurService;
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse

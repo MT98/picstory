@@ -26,6 +26,11 @@ import javax.validation.constraints.Pattern;
 @Table(uniqueConstraints=@UniqueConstraint(columnNames="email"))
 public class Utilisateur implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

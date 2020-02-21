@@ -2,7 +2,7 @@ package service;
 
 import java.util.List;
 
-import javax.ejb.Stateless;
+
 import javax.persistence.Query;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -12,7 +12,7 @@ import javax.persistence.PersistenceContext;
 import entities.Utilisateur;
 
 
-@Stateless
+
 public class UtilisateurService {
 	
 	@PersistenceContext

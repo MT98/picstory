@@ -1,13 +1,17 @@
 package controller;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -21,7 +25,7 @@ import service.AlbumService;
 import service.PhotoService;
 import service.ServiceException;
 
-@Stateless
+
 @WebServlet("/albums/*")
 public class AlbumsController extends HttpServlet {
 	
@@ -30,13 +34,13 @@ public class AlbumsController extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@EJB
+	@Inject
 	private UtilisateurSession utilisateurSession;
 	
-	@EJB
+	@Inject
 	private AlbumService albumService;
 	
-	@EJB
+	@Inject
 	private PhotoService photoService;
 	
 	private Album album;
@@ -48,6 +52,7 @@ public class AlbumsController extends HttpServlet {
 	
 	
 	private static final String list_Album="/WEB-INF/listeAlbums.jsp";
+	private static final String DISPLAY_ALBUM="/WEB-INF/detailsAlbum.jsp";
 	
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException
@@ -76,30 +81,27 @@ public class AlbumsController extends HttpServlet {
 		
 	}
 	
-	private void displayPhotosAlbums(HttpServletRequest request, HttpServletResponse response) {
+	private void displayPhotosAlbums(HttpServletRequest request, HttpServletResponse response) throws ServletException, 
+	IOException, NumberFormatException, ServiceException 
+	{
+			
+		Album album= albumService.getAlbumById(Long.parseLong(request.getParameter("id")));
 		
-		try {
-			Album album= albumService.getAlbumById(Long.parseLong(request.getParameter("id")));
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		try {
 			request.setAttribute("photos", picturesFromAlbum(album));
 		} catch (ServiceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		getServletContext().getRequestDispatcher(DISPLAY_ALBUM)
+		.forward(request, response);
 		
 	}
 
 	public void uploadPhoto(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, NumberFormatException, ServiceException
 	{
 		String title = request.getParameter("title");
-        String uri = request.getParameter("uri");
+        
         Album album= albumService.getAlbumById(Long.parseLong(request.getParameter("id")));
         InputStream inputStream = null; // input stream of the upload file
 
@@ -115,6 +117,20 @@ public class AlbumsController extends HttpServlet {
             // obtains input stream of the upload file
             inputStream = filePart.getInputStream();
         }
+        byte[] buffer = new byte[4096];
+        int bytesRead = -1;
+        ByteArrayOutputStream outputStream=null;
+        
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
+        }
+        byte[] imageBytes = outputStream.toByteArray();
+        String uri=Base64.getEncoder().encodeToString(imageBytes);
+        Photo photo=new Photo(album, title, uri, imageBytes);
+        inputStream.close();
+        outputStream.close();
+        photoService.create(photo);
+        
 	}
 	public Album getAlbum() {
 		if (album==null) {

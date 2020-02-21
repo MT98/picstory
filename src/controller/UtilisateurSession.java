@@ -8,6 +8,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -17,7 +18,7 @@ import service.AlbumService;
 import service.ServiceException;
 import service.UtilisateurService;
 
-@Stateless
+
 public class UtilisateurSession implements Serializable {
 	
 	/**
@@ -25,10 +26,10 @@ public class UtilisateurSession implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@EJB
+	@Inject
 	private UtilisateurService utilisateurService;
 	
-	@EJB
+	@Inject
 	private AlbumService albumService;
 	
 	private String email;

@@ -1,7 +1,6 @@
 package entities;
 
 import java.io.Serializable;
-import java.nio.file.Path;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,13 +18,15 @@ import javax.persistence.NamedQueries;
 	@NamedQuery(name="Photo.findAllPhotosFromAlbum",
 		    query="SELECT p FROM Photo p WHERE p.album=:album"),
 	@NamedQuery(name="Photo.findAllOwned",
-    		query="SELECT p FROM Photo p WHERE p.album in (SELECT a FROM Album a WHERE a.owner=:owner)"),
+    		query="SELECT p FROM Photo p WHERE p.album in (SELECT a FROM Album a WHERE a.proprietaire=:owner)"),
 	@NamedQuery(name="Photo.findPhotoByListUri",
 		    query="SELECT p FROM Photo p WHERE p.uri IN :uri"),
 
 })
 public class Photo implements Serializable {
 	
+	
+
 	/**
 	 * 
 	 */
