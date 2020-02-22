@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import service.ServiceException;
 import service.UtilisateurService;
+import service.UtilisateurServiceLocal;
 
 @WebServlet("/user/*")
 public class UtilisateurController extends HttpServlet {
@@ -28,7 +29,7 @@ public class UtilisateurController extends HttpServlet {
 	private static final String				VUE_LIST_USER	= "/WEB-INF/listUsers.jsp";
 
 	@Inject
-	private UtilisateurService utilisateurService;
+	UtilisateurServiceLocal utilisateurService;
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)

@@ -7,7 +7,7 @@
 <meta charset="ISO-8859-1">
 <link rel="stylesheet" href="../assets/style.css" >
 <link rel="stylesheet" href="../assets/bootstrap.min.css" >
-<script type="text/javascript" src="../assets/bootstrap.min.js"></script>
+
 <title>Insert title here</title>
 </head>
 <body>
@@ -20,8 +20,8 @@
           <h1 class="jumbotron-heading">Album example</h1>
           <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don't simply skip over it entirely.</p>
           <p>
-            <a href="login" class="btn btn-primary my-2">Se Connecter</a>
-            <a href="#" class="btn btn-secondary my-2">S'inscrire</a>
+            <a href="<c:url value='/albums/add'/>" class="btn btn-primary my-2">Ajouter Album</a>
+            <a href="#" class="btn btn-secondary my-2">Voir</a>
           </p>
         </div>
       </section>
@@ -38,8 +38,8 @@
 	                  <p class="card-text">${ album.description }</p>
 	                  <div class="d-flex justify-content-between align-items-center">
 	                    <div class="btn-group">
-	                      <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-	                      <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+	                      <a href="view?id=${album.id}" class="btn btn-primary">Visiter</a>
+	                      <a href="delete?id=${album.id}" class="btn btn-danger">Supprimer</a>
 	                    </div>
 	                    <small class="text-muted">9 mins</small>
 	                  </div>
@@ -53,6 +53,8 @@
 
     </main>
 	<c:import url="../template/footer.jsp"/>
+	 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.min.js"></script>
+     <script type="text/javascript" src="./assets/bootstrap.min.js"></script>
 
 </body>
 </html>

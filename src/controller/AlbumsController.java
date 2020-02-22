@@ -3,15 +3,14 @@ package controller;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
+
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -21,10 +20,11 @@ import javax.servlet.http.Part;
 
 import entities.Album;
 import entities.Photo;
-import service.AlbumService;
-import service.PhotoService;
+import entities.Utilisateur;
+import service.AlbumServiceLocal;
+import service.PhotoServiceLocal;
 import service.ServiceException;
-
+import service.UtilisateurServiceLocal;
 
 @WebServlet("/albums/*")
 public class AlbumsController extends HttpServlet {
@@ -35,13 +35,16 @@ public class AlbumsController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
-	private UtilisateurSession utilisateurSession;
+	UtilisateurSessionLocal utilisateurSession;
 	
 	@Inject
-	private AlbumService albumService;
+	AlbumServiceLocal albumService;
 	
 	@Inject
-	private PhotoService photoService;
+	PhotoServiceLocal photoService;
+	
+	@Inject
+	UtilisateurServiceLocal utilisateurService;
 	
 	private Album album;
 	
@@ -52,6 +55,7 @@ public class AlbumsController extends HttpServlet {
 	
 	
 	private static final String list_Album="/WEB-INF/listeAlbums.jsp";
+	private static final String ADD_ALBUM="/WEB-INF/addAlbum.jsp";
 	private static final String DISPLAY_ALBUM="/WEB-INF/detailsAlbum.jsp";
 	
 	protected void doGet(HttpServletRequest request,
@@ -61,7 +65,7 @@ public class AlbumsController extends HttpServlet {
 		if (requestedUrl.endsWith("/albums/list"))
 		{
 			try {
-				request.setAttribute("albums", getListAlbumOwnedByCurrentUser());
+				request.setAttribute("albums", albumService.getAlbums());
 			} catch (ServiceException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -77,10 +81,37 @@ public class AlbumsController extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}else if (requestedUrl.endsWith("/albums/add"))
+		{
+			getServletContext().getRequestDispatcher(ADD_ALBUM)
+			.forward(request, response);
+		}else if (requestedUrl.endsWith("/clients/delete"))
+		{
+			try {
+				deleteAlbum(request, response);
+			}  catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			response.sendRedirect(request.getContextPath());
 		}
 		
 	}
 	
+	protected void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException
+	{
+		request.setCharacterEncoding("utf-8");
+		String requestedUrl = request.getRequestURI();
+
+		if (requestedUrl.endsWith("/albums/add"))
+		{
+			createAlbum(request, response);
+		}
+	}
 	private void displayPhotosAlbums(HttpServletRequest request, HttpServletResponse response) throws ServletException, 
 	IOException, NumberFormatException, ServiceException 
 	{
@@ -89,6 +120,7 @@ public class AlbumsController extends HttpServlet {
 		
 		try {
 			request.setAttribute("photos", picturesFromAlbum(album));
+			request.setAttribute("album", album);
 		} catch (ServiceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -129,8 +161,18 @@ public class AlbumsController extends HttpServlet {
         Photo photo=new Photo(album, title, uri, imageBytes);
         inputStream.close();
         outputStream.close();
-        photoService.create(photo);
+        try {
+			photoService.create(photo);
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         
+	}
+	
+	public void deleteAlbum(HttpServletRequest request, HttpServletResponse response)
+	{
+		
 	}
 	public Album getAlbum() {
 		if (album==null) {
@@ -150,13 +192,32 @@ public class AlbumsController extends HttpServlet {
 	    }
 	}
 	
-	public String createAlbum() {		
+	public void createAlbum(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
+		
+		String titre= String.valueOf(request.getParameter("titre"));
+		String description= String.valueOf(request.getParameter("description"));
+		Utilisateur utilisateur= new Utilisateur("badara@gmail.com","badara","diop","passer123");
+		try {
+			utilisateurService.createUser(utilisateur);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		Album album= new Album(titre,description,utilisateur);
 		try {
 			albumService.createAlbum(album);
-		} catch (ServiceException e) {
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return list_Album;
+		getServletContext().getRequestDispatcher(list_Album)
+				.forward(request, response);
+		/*try {
+			albumService.createAlbum(album);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list_Album;*/
 	}
 	
 	public String displayAlbum(Long id) {

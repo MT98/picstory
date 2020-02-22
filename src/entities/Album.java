@@ -102,5 +102,10 @@ public class Album implements Serializable {
 	public Album(Utilisateur proprietaire) {
 		this.proprietaire=proprietaire;
 	}
+	public Album(String title, String description, Utilisateur proprietaire) {
+		this.title=title;
+		this.description= description;
+		this.proprietaire=proprietaire;
+	}
 
 }

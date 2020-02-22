@@ -4,23 +4,59 @@ import java.util.List;
 
 
 import javax.persistence.Query;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
+import javax.annotation.ManagedBean;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
 
 import entities.Utilisateur;
 
 
-
-public class UtilisateurService {
+@ManagedBean
+public class UtilisateurService implements UtilisateurServiceLocal {
+	
+	@PersistenceUnit
+	private EntityManagerFactory emf;
 	
 	@PersistenceContext
-	private EntityManager em ;
+	private EntityManager em;
 	
-	public Utilisateur createUser(Utilisateur utilisateur) throws ServiceException
+	public Utilisateur createUser(Utilisateur utilisateur) throws ServiceException, NamingException, NotSupportedException, SystemException 
 	{
+		UserTransaction transaction = (UserTransaction)new InitialContext().lookup("java:comp/UserTransaction");
+		transaction.begin();
 		this.em.persist(utilisateur);
+		try {
+			transaction.commit();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (RollbackException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (HeuristicMixedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (HeuristicRollbackException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return utilisateur;
 	}
 	
@@ -32,7 +68,9 @@ public class UtilisateurService {
 	
 	public Utilisateur deleteUser(Utilisateur utilisateur ) throws ServiceException
 	{
+		
 		this.em.remove(utilisateur);
+		
 		return utilisateur;
 	}
 	

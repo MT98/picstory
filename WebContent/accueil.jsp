@@ -6,7 +6,7 @@
 <meta charset="ISO-8859-1">
 <link rel="stylesheet" href="./assets/style.css" >
 <link rel="stylesheet" href="./assets/bootstrap.min.css" >
-<script type="text/javascript" src="./assets/bootstrap.min.js"></script>
+
 
 <title>Accueil</title>
 </head>
@@ -215,5 +215,7 @@
         <p>New to Bootstrap? <a href="../../">Visit the homepage</a> or read our <a href="../../getting-started/">getting started guide</a>.</p>
       </div>
     </footer>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.min.js"></script>
+     <script type="text/javascript" src="./assets/bootstrap.min.js"></script>
 </body>
 </html>

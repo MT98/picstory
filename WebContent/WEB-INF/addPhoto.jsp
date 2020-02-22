@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Ajouter Album</title>
+<title>Ajouter Photo</title>
 <link rel="stylesheet" href="../assets/style.css" >
 <link rel="stylesheet" href="../assets/bootstrap.min.css" >
 </head>
@@ -16,24 +16,30 @@
 	<div  class="container " style="background-color:#F3F8F9;height: 600px;">
 		<form class="form-horizontal" method="post" action="add">
 			<fieldset>
-               <legend class="text-center header">Ajouter album</legend>
+               <legend class="text-center header">Ajouter photo</legend>
 
                 <div class="form-group">
                     <label>Titre </label>
                     <div class="col-md-6">
-                        <input id="fname" name="titre" type="text" placeholder="Nom album" class="form-control">
+                        <input id="fname" name="title" type="text" placeholder="Nom photo" class="form-control">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Description </label>
-                    <div class="col-md-6">
-                        <textarea id="" name="description"  placeholder="" class="form-control"> </textarea>
-                    </div>
-                </div>
+                    <div class="input-group">
+					  <div class="input-group-prepend">
+					    <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+					  </div>
+					  <div class="custom-file">
+					    <input type="file" class="custom-file-input" id="inputGroupFile01"
+					      aria-describedby="inputGroupFileAddon01" name="photo">
+					    <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+					  </div>
+					</div>               
+				 </div>
 				<div class="form-group">
-                            <div class="col-md-12 text-center">
-                                <button type="submit" class="btn btn-primary btn-lg">Ajouter</button>
-                            </div>
+                    <div class="col-md-12 text-center">
+                        <button type="submit" class="btn btn-primary btn-lg">Ajouter</button>
+                    </div>
                  </div>
              
            </fieldset> 

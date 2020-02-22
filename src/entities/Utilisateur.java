@@ -55,6 +55,14 @@ public class Utilisateur implements Serializable {
 	{
 		
 	}
+	
+	public Utilisateur(String email, String lastname, String firstname, String password) {
+		super();
+		this.email = email;
+		this.lastname = lastname;
+		this.firstname = firstname;
+		this.password = password;
+	}
 
 	public Long getId() {
 		return id;

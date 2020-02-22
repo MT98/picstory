@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
 
+import javax.annotation.ManagedBean;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.faces.application.FacesMessage;
@@ -15,22 +16,19 @@ import javax.servlet.http.HttpSession;
 
 import entities.Utilisateur;
 import service.AlbumService;
+import service.AlbumServiceLocal;
 import service.ServiceException;
 import service.UtilisateurService;
+import service.UtilisateurServiceLocal;
 
-
-public class UtilisateurSession implements Serializable {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
-	@Inject
-	private UtilisateurService utilisateurService;
+@ManagedBean
+public class UtilisateurSession implements UtilisateurSessionLocal {
 	
 	@Inject
-	private AlbumService albumService;
+	UtilisateurServiceLocal utilisateurService;
+	
+	@Inject
+	AlbumServiceLocal albumService;
 	
 	private String email;
 	private String password;
@@ -41,19 +39,21 @@ public class UtilisateurSession implements Serializable {
 		    throws SQLException, IOException, ServiceException {
 		
 		try {
-			connectedUser = utilisateurService.login(email, password);
+			setEmail(String.valueOf(request.getAttribute("email")));
+			setPassword(String.valueOf(request.getAttribute("password")));
+			connectedUser = utilisateurService.login(this.getEmail(), this.getPassword());
 		} catch (ServiceException e) {
-			FacesContext facesContext = FacesContext.getCurrentInstance();
-			FacesMessage facesMessage = new FacesMessage("Email ou mot de passe incorrects");
+			//FacesContext facesContext = FacesContext.getCurrentInstance();
+			//FacesMessage facesMessage = new FacesMessage("Email ou mot de passe incorrects");
 			// ajoute le message pour toute la page (1er param==null)
-			facesContext.addMessage(null, facesMessage);
-			response.sendRedirect("/login");
+			//facesContext.addMessage(null, facesMessage);
+			response.sendRedirect("login");
 		}
-		FacesContext context = FacesContext.getCurrentInstance();
-		HttpSession session = (HttpSession) context.getExternalContext().getSession(true);
+		//FacesContext context = FacesContext.getCurrentInstance();
+		HttpSession session = request.getSession();
 		session.setAttribute("utilisateurSession",this);
 		
-		response.sendRedirect("/albums/list");	
+		response.sendRedirect("albums/list");	
 		
 	}
 	

@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-
 @WebServlet({ "/login", "/logout" })
 public class Authentication extends HttpServlet {
 	
@@ -22,7 +21,7 @@ public class Authentication extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	@Inject
-	private UtilisateurSession utilisateurSession;
+	UtilisateurSessionLocal utilisateurSession;
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
