@@ -76,10 +76,30 @@ public class UtilisateurService implements UtilisateurServiceLocal {
 	
 	public List<Utilisateur> getUsers() throws ServiceException
 	{
-		Query query= this.em.createQuery("FROM Utilisateur");
+		Query query= this.em.createQuery("SELECT u FROM Utilisateur AS u");
 		List<Utilisateur> listUsers= query.getResultList();
 		return listUsers;
 	}
+	
+
+	public Utilisateur getUserByEmail(String email) throws ServiceException
+	{
+		try {
+			String query = "SELECT u FROM Utilisateur u WHERE u.email=:email";
+			Query tq = this.em.createQuery(query, Utilisateur.class);
+			tq.setParameter("email", email);
+	
+			Utilisateur utilisateur = (Utilisateur) tq.getSingleResult();
+			
+			return utilisateur;
+			
+		}catch(Exception ex)
+		{
+			throw new ServiceException("Echec de récupèration de l'utilisateur à travers son email!");
+		}
+		
+	}
+
 	
 	public Utilisateur getUserById(Long id) throws ServiceException
 	{

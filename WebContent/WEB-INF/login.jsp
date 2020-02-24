@@ -14,11 +14,10 @@
   <div id="formContent">
     <!-- Tabs Titles -->
     <h2 class="active"> Sign In </h2>
-    <h2 class="inactive underlineHover">Sign Up </h2>
 
    
     <!-- Login Form -->
-    <form method="post">
+    <form method="post" action="login">
       <input type="text" id="email" class="fadeIn second" name="email" placeholder="login">
       <input type="password" id="password" class="fadeIn third" name="password" placeholder="password">
       <input type="submit" class="fadeIn fourth" value="Se Connecter">

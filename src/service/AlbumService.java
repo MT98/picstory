@@ -98,12 +98,26 @@ public class AlbumService implements AlbumServiceLocal {
 		return album;
 	}
 	
-	public void partager(String albumId, String userId) throws ServiceException
+	public void partager(String albumId, String userId) throws ServiceException, NamingException
 	{
-		Utilisateur utilisateur= this.em.find(Utilisateur.class, userId);
-		Album album = this.em.find(Album.class, albumId);
+		Utilisateur utilisateur= this.em.find(Utilisateur.class, Long.parseLong(userId));
+		Album album = this.em.find(Album.class, Long.parseLong(albumId));
 		album.getPartageAvec().add(utilisateur);
+		UserTransaction transaction = (UserTransaction)new InitialContext().lookup("java:comp/UserTransaction");
+		try {
+			transaction.begin();
+		} catch (NotSupportedException | SystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		this.em.merge(album);
+		try {
+			transaction.commit();
+		} catch (SecurityException | IllegalStateException | RollbackException | HeuristicMixedException
+				| HeuristicRollbackException | SystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public List<Album> listAlbumOwnedBy(Utilisateur utilisateur)
@@ -117,6 +131,15 @@ public class AlbumService implements AlbumServiceLocal {
 		Query query = this.em.createNamedQuery("Album.findAlbumSharedWith");
 		query.setParameter("sharedWith", utilisateur);
 		return query.getResultList();
+	}
+
+	@Override
+	public long nombrePhotoAlbum(Album album) {
+		
+		Query query = this.em.createQuery("SELECT COUNT(p) FROM Photo p WHERE p.album =:album");
+		query.setParameter("album", album);
+		long nombre= (long) query.getSingleResult();
+		return nombre;
 	}
 
 }

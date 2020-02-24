@@ -7,6 +7,7 @@
 <meta charset="ISO-8859-1">
 <link rel="stylesheet" href="../assets/style.css" >
 <link rel="stylesheet" href="../assets/bootstrap.min.css" >
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" >
 
 <title>Insert title here</title>
 </head>
@@ -22,6 +23,7 @@
           <p>
             <a href="<c:url value='/albums/add'/>" class="btn btn-primary my-2">Ajouter Album</a>
             <a href="<c:url value='/images/add'/>" class="btn btn-secondary my-2">Ajouter Photo</a>
+            <a href="<c:url value='/albums/shareWith'/>" class="btn btn-secondary my-2">Partagé avec moi</a>
           </p>
         </div>
       </section>
@@ -38,8 +40,9 @@
 	                  <p class="card-text">${ album.description }</p>
 	                  <div class="d-flex justify-content-between align-items-center">
 	                    <div class="btn-group">
-	                      <a href="view?id=${album.id}" class="btn btn-primary">Visiter</a>
-	                      <a href="delete?id=${album.id}" class="btn btn-danger">Supprimer</a>
+	                      <a href="view?id=${album.id}" class="btn btn-primary">View <i class="fa fa-eye"></i></a>
+	                      <a href="share?id=${album.id}" class="btn btn-success ">Share<i class="fa fa-share-alt-square"></i></a>
+	                      <a href="delete?id=${album.id}" class="btn btn-danger"><i class="fa fa-trash-o"></i></a>
 	                    </div>
 	                    <small class="text-muted">9 mins</small>
 	                  </div>

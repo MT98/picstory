@@ -20,10 +20,12 @@ public interface AlbumServiceLocal {
 	
 	public Album getAlbumById(Long id) throws ServiceException;
 	
-	public void partager(String albumId, String userId) throws ServiceException;
+	public void partager(String albumId, String userId) throws ServiceException, NamingException;
 	
 	public List<Album> listAlbumOwnedBy(Utilisateur utilisateur);
 	
 	public List<Album> listAlbumSharedWith(Utilisateur utilisateur) ;
+	
+	public long nombrePhotoAlbum(Album album);
 
 }

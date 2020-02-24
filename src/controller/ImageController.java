@@ -67,13 +67,7 @@ public class ImageController extends HttpServlet {
 		{
 			response.sendRedirect(request.getContextPath());
 		}
-		/*String filename = request.getPathInfo().substring(1);
-    	System.out.println("serving image : "+filename);
-        File file = new File(getServletContext().getInitParameter("directory"), filename);
-        response.setHeader("Content-Type", getServletContext().getMimeType(filename));
-        response.setHeader("Content-Length", String.valueOf(file.length()));
-        response.setHeader("Content-Disposition", "inline; filename=\"" + filename + "\"");
-        Files.copy(file.toPath(), response.getOutputStream());*/
+		
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

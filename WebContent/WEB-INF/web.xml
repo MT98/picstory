@@ -11,4 +11,18 @@
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
    
+	<!--  <servlet>
+    <servlet-name>StartApp</servlet-name>
+    <servlet-class>controller.StartApp</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>-->
+  
+  <filter>
+        <filter-name>AuthenticationFilter</filter-name>
+        <filter-class>filter.AuthenticationFilter</filter-class>
+  </filter>
+  <filter-mapping>
+       <filter-name>AuthenticationFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+  </filter-mapping>
 </web-app>

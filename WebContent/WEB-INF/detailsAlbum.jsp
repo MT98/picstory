@@ -32,9 +32,9 @@
 			    <p class="mb-0">${ album.description}</p>
 			  </div>
 			  <ul class="list-group list-group-flush">
-			    <li class="list-group-item">Nombre Photo: </li>
+			    <li class="list-group-item">Nombre Photo: ${nombrePhoto} </li>
 			    <li class="list-group-item">Date Creation</li>
-			    <li class="list-group-item">Proprietaire : </li>
+			    <li class="list-group-item">Proprietaire :  </li>
 			  </ul>
 			  <div class="card-body">
 			    <a href="#!" class="btn btn-success">Partager</a>
@@ -45,10 +45,10 @@
 	 
       <div class="album py-5 bg-light col-sm-8" >
         <div class="container">
-
-          <c:forEach items="${ photos }" var="photo">
+          
           	<div class="row">
-	            <div class="col-md-2">
+          		<c:forEach items="${ photos }" var="photo">
+	            <div class="col-md-4">
 	              <div class="card mb-4 box-shadow">
 	                <img class="card-img-top" src="data:image/jpg;base64,${photo.uri}" alt="Card image cap">
 	                <div class="card-body">
@@ -58,13 +58,13 @@
 	                      <a class="btn btn-primary  image-link" href="data:image/jpg;base64,${photo.uri}" >Agrandir</a>
 	                      <a href="<c:url value='/images/delete?id=${photo.id}'/>" class="btn btn-danger">Supprimer</a>
 	                    </div>
-	                    <small class="text-muted">9 mins</small>
+	                   
 	                  </div>
 	                </div>
 	              </div>
-	            </div>          
-	          </div>
-          </c:forEach>
+	            </div>
+	            </c:forEach>                 
+        	</div>
         </div>
       </div>
        </div>

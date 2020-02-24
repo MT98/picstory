@@ -45,6 +45,7 @@ public class Authentication extends HttpServlet {
 		String requestedUrl = request.getRequestURI();
 		if (requestedUrl.endsWith("/login"))
 		{
+			System.out.println(request.getParameter("email"));
 			try {
 				utilisateurSession.login(request, response);
 			} catch (Exception e) {

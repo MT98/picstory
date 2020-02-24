@@ -1,22 +1,17 @@
 package controller;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Base64;
 import java.util.List;
-import java.util.Map;
 
-
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.naming.NamingException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
+
 
 import entities.Album;
 import entities.Photo;
@@ -34,8 +29,7 @@ public class AlbumsController extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Inject
-	UtilisateurSessionLocal utilisateurSession;
+	UtilisateurSession utilisateurSession;
 	
 	@Inject
 	AlbumServiceLocal albumService;
@@ -57,15 +51,17 @@ public class AlbumsController extends HttpServlet {
 	private static final String list_Album="/WEB-INF/listeAlbums.jsp";
 	private static final String ADD_ALBUM="/WEB-INF/addAlbum.jsp";
 	private static final String DISPLAY_ALBUM="/WEB-INF/detailsAlbum.jsp";
+	private static final String SHARE_ALBUM="/WEB-INF/shareAlbum.jsp";
 	
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException
 	{
 		String requestedUrl = request.getRequestURI();
+		utilisateurSession= (UtilisateurSession) request.getSession().getAttribute("utilisateurSession");
 		if (requestedUrl.endsWith("/albums/list"))
 		{
 			try {
-				request.setAttribute("albums", albumService.getAlbums());
+				request.setAttribute("albums", getListAlbumOwnedByCurrentUser(utilisateurSession));
 			} catch (ServiceException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -93,6 +89,24 @@ public class AlbumsController extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}else if (requestedUrl.endsWith("/albums/share"))
+		{
+			try {
+				vuePartage(request,response);
+			} catch (NumberFormatException | ServiceException | ServletException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else if (requestedUrl.endsWith("/albums/shareWith"))
+		{
+			/*try {
+				request.setAttribute("albums", albumService.listAlbumSharedWith(""));
+			} catch (ServiceException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			getServletContext().getRequestDispatcher(list_Album)*/
 		}
 		else
 		{
@@ -100,6 +114,7 @@ public class AlbumsController extends HttpServlet {
 		}
 		
 	}
+	
 	
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException
@@ -110,8 +125,28 @@ public class AlbumsController extends HttpServlet {
 		if (requestedUrl.endsWith("/albums/add"))
 		{
 			createAlbum(request, response);
+		}else if (requestedUrl.endsWith("/albums/share"))
+		{
+			try {
+				albumService.partager(request.getParameter("albumId"), request.getParameter("userId"));
+			} catch (NumberFormatException | ServiceException | NamingException  e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			response.sendRedirect("list");
 		}
 	}
+	
+	private void vuePartage(HttpServletRequest request, HttpServletResponse response) throws NumberFormatException, ServiceException, ServletException, IOException {
+		
+		Album album = albumService.getAlbumById(Long.parseLong(request.getParameter("id")));
+		RequestDispatcher dispatcher = request.getRequestDispatcher(SHARE_ALBUM);
+		request.setAttribute("album", album);
+		request.setAttribute("utilisateurs", utilisateurService.getUsers());	
+		dispatcher.forward(request, response);
+		
+	}
+
 	private void displayPhotosAlbums(HttpServletRequest request, HttpServletResponse response) throws ServletException, 
 	IOException, NumberFormatException, ServiceException 
 	{
@@ -121,6 +156,7 @@ public class AlbumsController extends HttpServlet {
 		try {
 			request.setAttribute("photos", picturesFromAlbum(album));
 			request.setAttribute("album", album);
+			request.setAttribute("nombrePhoto", albumService.nombrePhotoAlbum(album));
 		} catch (ServiceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -182,29 +218,14 @@ public class AlbumsController extends HttpServlet {
 		return album;
 	}
 	
-	public String checkAlbum() {
-		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-        String albumId = params.get("albumId");
-        
-        if(albumId == null || albumId == ""){
-	    	return "list-album?faces-redirect=true";
-	    } else {
-	        return null; // Stay on current page.
-	    }
-	}
+
 	
 	public void createAlbum(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
 		
 		String titre= String.valueOf(request.getParameter("titre"));
 		String description= String.valueOf(request.getParameter("description"));
-		Utilisateur utilisateur= new Utilisateur(false,"badara@gmail.com","badara","diop","passer123");
-		try {
-			utilisateurService.createUser(utilisateur);
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		Album album= new Album(titre,description,utilisateur);
+		utilisateurSession= (UtilisateurSession) request.getSession().getAttribute("utilisateurSession");
+		Album album= new Album(titre,description,utilisateurSession.getConnectedUser());
 		try {
 			albumService.createAlbum(album);
 		} catch (Exception e) {
@@ -225,8 +246,11 @@ public class AlbumsController extends HttpServlet {
 		return "album?faces-redirect=true&albumId="+id;
 	}
 	
-	public List<Album> getListAlbumOwnedByCurrentUser() throws ServiceException {
-		return albumService.listAlbumOwnedBy(utilisateurSession.getConnectedUser());
+	public List<Album> getListAlbumOwnedByCurrentUser(UtilisateurSession utilisateurSession) throws ServiceException {
+		
+		if(utilisateurSession !=null)
+			return albumService.listAlbumOwnedBy(utilisateurSession.getConnectedUser());
+		return null;
 	}
 	
 	public List<Photo> getListPictureFromAlbum() throws ServiceException {

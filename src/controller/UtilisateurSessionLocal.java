@@ -4,6 +4,7 @@ package controller;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,11 +15,10 @@ import service.ServiceException;
 
 public interface UtilisateurSessionLocal {
 	
-	public void login(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServiceException;
+	public void login(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServiceException, ServletException;
 	
 	public void logout(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServiceException;
 	
-	public String homeRedirect();
 	
 	public String getEmail() ;
 
