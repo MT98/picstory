@@ -11,7 +11,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-		<c:import url="../template/entete.jsp"/>
+	<c:import url="../template/entete.jsp"/>
 	
     <main role="main">
 
@@ -21,7 +21,7 @@
           <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don't simply skip over it entirely.</p>
           <p>
             <a href="<c:url value='/albums/add'/>" class="btn btn-primary my-2">Ajouter Album</a>
-            <a href="#" class="btn btn-secondary my-2">Voir</a>
+            <a href="<c:url value='/images/add'/>" class="btn btn-secondary my-2">Ajouter Photo</a>
           </p>
         </div>
       </section>
@@ -54,7 +54,7 @@
     </main>
 	<c:import url="../template/footer.jsp"/>
 	 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.min.js"></script>
-     <script type="text/javascript" src="./assets/bootstrap.min.js"></script>
+     <script type="text/javascript" src="../assets/bootstrap.min.js"></script>
 
 </body>
 </html>

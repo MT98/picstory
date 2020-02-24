@@ -14,7 +14,7 @@ public interface AlbumServiceLocal {
 	public Album createAlbum(Album album) throws ServiceException, NamingException, NotSupportedException, SystemException;
 	public Album updateAlbum(Album album) throws ServiceException, NamingException;
 	
-	public Album deleteAlbumById(Long id ) throws ServiceException, NamingException;
+	public void deleteAlbumById(Long id ) throws ServiceException, NamingException;
 	
 	public List<Album> getAlbums() throws ServiceException;
 	

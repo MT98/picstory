@@ -14,7 +14,7 @@
 	<main role="main">
 	
 	<div  class="container " style="background-color:#F3F8F9;height: 600px;">
-		<form class="form-horizontal" method="post" action="add">
+		<form class="form-horizontal" method="post" action="add" enctype="multipart/form-data">
 			<fieldset>
                <legend class="text-center header">Ajouter photo</legend>
 
@@ -25,16 +25,20 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="input-group">
-					  <div class="input-group-prepend">
-					    <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-					  </div>
-					  <div class="custom-file">
-					    <input type="file" class="custom-file-input" id="inputGroupFile01"
-					      aria-describedby="inputGroupFileAddon01" name="photo">
-					    <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-					  </div>
+                    <div class="col-md-6">
+					  <input type="file" id="avatar" name="photo" >
 					</div>               
+				 </div>
+				 <div class="form-group">
+				 	<label>Album </label>
+				 	<div class="col-md-6">
+                        <select class="browser-default custom-select" name="album" required>
+                       		 <option value="0" selected>Open this select menu</option>
+                        	 <c:forEach items="${albums}" var="album">
+                        	 	 <option value="${album.id}">${album.title} ${album.id}</option>                   	 	
+                       	   	 </c:forEach>				
+						</select>
+                    </div>
 				 </div>
 				<div class="form-group">
                     <div class="col-md-12 text-center">

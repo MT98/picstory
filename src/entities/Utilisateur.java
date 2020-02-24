@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -39,6 +40,9 @@ public class Utilisateur implements Serializable {
 	@NotNull
 	private String email;
 	
+	@Column(name = "is_admin")
+	private Boolean isAdmin;
+	
 	@NotNull
 	private String lastname;
 	
@@ -56,14 +60,23 @@ public class Utilisateur implements Serializable {
 		
 	}
 	
-	public Utilisateur(String email, String lastname, String firstname, String password) {
+	public Utilisateur(Boolean isAdmin, String lastname, String firstname,String email , String password) {
 		super();
+		this.isAdmin=isAdmin;
 		this.email = email;
 		this.lastname = lastname;
 		this.firstname = firstname;
 		this.password = password;
 	}
+	
+	public Boolean getIsAdmin() {
+		return isAdmin;
+	}
 
+	public void setIsAdmin(Boolean isAdmin) {
+		this.isAdmin = isAdmin;
+	}
+	
 	public Long getId() {
 		return id;
 	}

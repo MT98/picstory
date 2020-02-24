@@ -1,15 +1,15 @@
 package controller;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
+
 import java.util.Base64;
 
 import javax.inject.Inject;
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +24,7 @@ import service.ServiceException;
 
 
 @WebServlet("/images/*")
+@MultipartConfig
 public class ImageController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -54,6 +55,17 @@ public class ImageController extends HttpServlet {
 			
 			getServletContext().getRequestDispatcher(AJOUT_PHOTO)
 					.forward(request, response);
+		}else if(requestedUrl.endsWith("/images/delete"))
+		{
+			try {
+				deleteImage(request, response);
+			} catch (NumberFormatException | IOException | ServiceException | ServletException | NamingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else
+		{
+			response.sendRedirect(request.getContextPath());
 		}
 		/*String filename = request.getPathInfo().substring(1);
     	System.out.println("serving image : "+filename);
@@ -86,11 +98,26 @@ public class ImageController extends HttpServlet {
 		String title = request.getParameter("title");
         
         Album album= albumService.getAlbumById(Long.parseLong(request.getParameter("album")));
-        InputStream inputStream = null; // input stream of the upload file
+        Part filePart = request.getPart("photo");
+        /*String fileName = extractFileName(filePart);
+        filePart.write(fileName);
+        File file = new File(fileName);
+        byte[] bFile = new byte[(int) file.length()];
+        
+        try {
+	     FileInputStream fileInputStream = new FileInputStream(file);
+	     //convert file into array of bytes
+	     fileInputStream.read(bFile);
+	     fileInputStream.close();
+        } catch (Exception e) {
+	     e.printStackTrace();
+        }*/
+       InputStream inputStream = null; // input stream of the upload file
+       
 
         String message = null;
         // obtains the upload file part in this multipart request
-        Part filePart = request.getPart("photo");
+       
         if (filePart != null) {
             // prints out some information for debugging
             System.out.println(filePart.getName());
@@ -100,9 +127,9 @@ public class ImageController extends HttpServlet {
             // obtains input stream of the upload file
             inputStream = filePart.getInputStream();
         }
+        ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
         byte[] buffer = new byte[4096];
-        int bytesRead = -1;
-        ByteArrayOutputStream outputStream=null;
+        int bytesRead = 0;
         
         while ((bytesRead = inputStream.read(buffer)) != -1) {
             outputStream.write(buffer, 0, bytesRead);
@@ -118,7 +145,16 @@ public class ImageController extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        
+        response.sendRedirect(request.getContextPath() + "/albums/list");	
+	}
+	
+	
+	private void deleteImage(HttpServletRequest request, HttpServletResponse response)
+		    throws IOException, NumberFormatException, ServiceException, ServletException, NamingException {
+		 
+		photoService.deletePhotoById(Long.parseLong(request.getParameter("id")));
+		response.sendRedirect(request.getContextPath() + "/albums/list");
+
 	}
 
 }

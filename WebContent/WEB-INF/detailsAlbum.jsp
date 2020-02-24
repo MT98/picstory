@@ -24,8 +24,8 @@
           </p>
         </div>
       </section>
-      <div class=" container">
-	  <div class=" ">
+	  <div class="row ">
+	  	<div class="col-sm-3">
 	  	 <div class="card" style="width: 20rem;">
 			  <div class="card-body">
 			    <h5 class="font-weight-bold mb-3">${ album.title }</h5>
@@ -41,23 +41,52 @@
 			    <a href="<c:url value='/images/add'/>" class="btn btn-primary">Ajouter Photo</a>
 			  </div>
 		</div>
-	  </div>
-      <div class="album py-5 bg-light right" style="width:70%;">
+		</div>
+	 
+      <div class="album py-5 bg-light col-sm-8" >
         <div class="container">
 
           <c:forEach items="${ photos }" var="photo">
-	          <div class="row">
-	            <div class="col-md-4">
-	              	<img src=""/>
-	              	
+          	<div class="row">
+	            <div class="col-md-2">
+	              <div class="card mb-4 box-shadow">
+	                <img class="card-img-top" src="data:image/jpg;base64,${photo.uri}" alt="Card image cap">
+	                <div class="card-body">
+	                  <p class="card-text">${ photo.title }</p>
+	                  <div class="d-flex justify-content-between align-items-center">
+	                    <div class="btn-group">
+	                      <a class="btn btn-primary  image-link" href="data:image/jpg;base64,${photo.uri}" >Agrandir</a>
+	                      <a href="<c:url value='/images/delete?id=${photo.id}'/>" class="btn btn-danger">Supprimer</a>
+	                    </div>
+	                    <small class="text-muted">9 mins</small>
+	                  </div>
+	                </div>
+	              </div>
 	            </div>          
 	          </div>
           </c:forEach>
         </div>
       </div>
-      </div>
+       </div>
+    
 
     </main>
 	<c:import url="../template/footer.jsp"/>
+	<script type="text/javascript">
+	$(function () {
+	    "use strict";
+	    
+	    $(".image-link a").click(function () {
+	        var $src = $(this).attr("href");
+	        $(".show").fadeIn();
+	        $(".img-show img").attr("src", $src);
+	    });
+	    
+	    $("span, .overlay").click(function () {
+	        $(".show").fadeOut();
+	    });
+	    
+	});
+	</script>
 </body>
 </html>

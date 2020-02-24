@@ -85,7 +85,7 @@ public class AlbumsController extends HttpServlet {
 		{
 			getServletContext().getRequestDispatcher(ADD_ALBUM)
 			.forward(request, response);
-		}else if (requestedUrl.endsWith("/clients/delete"))
+		}else if (requestedUrl.endsWith("/albums/delete"))
 		{
 			try {
 				deleteAlbum(request, response);
@@ -130,7 +130,7 @@ public class AlbumsController extends HttpServlet {
 		
 	}
 
-	public void uploadPhoto(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, NumberFormatException, ServiceException
+	/*public void uploadPhoto(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, NumberFormatException, ServiceException
 	{
 		String title = request.getParameter("title");
         
@@ -168,11 +168,12 @@ public class AlbumsController extends HttpServlet {
 			e.printStackTrace();
 		}
         
-	}
+	}*/
 	
-	public void deleteAlbum(HttpServletRequest request, HttpServletResponse response)
+	public void deleteAlbum(HttpServletRequest request, HttpServletResponse response) throws NumberFormatException, ServiceException, NamingException, IOException
 	{
-		
+		albumService.deleteAlbumById(Long.parseLong(request.getParameter("id")));
+		response.sendRedirect("list");
 	}
 	public Album getAlbum() {
 		if (album==null) {
@@ -196,7 +197,7 @@ public class AlbumsController extends HttpServlet {
 		
 		String titre= String.valueOf(request.getParameter("titre"));
 		String description= String.valueOf(request.getParameter("description"));
-		Utilisateur utilisateur= new Utilisateur("badara@gmail.com","badara","diop","passer123");
+		Utilisateur utilisateur= new Utilisateur(false,"badara@gmail.com","badara","diop","passer123");
 		try {
 			utilisateurService.createUser(utilisateur);
 		} catch (Exception e1) {

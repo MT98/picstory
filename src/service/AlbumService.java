@@ -64,7 +64,7 @@ public class AlbumService implements AlbumServiceLocal {
 		return album;
 	}
 	
-	public Album deleteAlbumById(Long id ) throws ServiceException, NamingException
+	public void deleteAlbumById(Long id ) throws ServiceException, NamingException
 	{
 		Album album = this.em.find(Album.class, id);
 		UserTransaction transaction = (UserTransaction)new InitialContext().lookup("java:comp/UserTransaction");
@@ -74,7 +74,8 @@ public class AlbumService implements AlbumServiceLocal {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		this.em.remove(album);
+		
+		this.em.remove(this.em.merge(album));
 		try {
 			transaction.commit();
 		} catch (SecurityException | IllegalStateException | RollbackException | HeuristicMixedException
@@ -82,7 +83,6 @@ public class AlbumService implements AlbumServiceLocal {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return album;
 	}
 	
 	public List<Album> getAlbums() throws ServiceException

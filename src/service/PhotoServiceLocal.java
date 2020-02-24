@@ -20,7 +20,7 @@ public interface PhotoServiceLocal {
 	public List<Photo> listPhotoFromAlbum(Album a);
 	
 	public List<Photo> listPhotosOwnedBy(Utilisateur utilisateur) ;	
-	public void deletePhotoById(Long id) throws ServiceException;
-	public void deletePhoto(Photo photo) ;
+	public void deletePhotoById(Long id) throws ServiceException, NamingException;
+	public void deletePhoto(Photo photo) throws NamingException ;
 
 }

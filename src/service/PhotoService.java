@@ -3,6 +3,7 @@ package service;
 import java.util.List;
 
 import javax.annotation.ManagedBean;
+import javax.inject.Inject;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.persistence.EntityManager;
@@ -10,6 +11,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
@@ -28,34 +30,30 @@ public class PhotoService implements PhotoServiceLocal {
 	@PersistenceContext
 	private EntityManager em=jpaUtils.getEm() ;
 	
+	@Inject
+	UtilisateurServiceLocal utilisateurService;
+	
 	public void create(Photo photo) throws NamingException  {
-		Album album = photo.getAlbum();
-		album.setOwner(this.em.merge(this.em.merge( album.getProprietaire())));
-		photo.setAlbum(this.em.merge(this.em.merge(album)));
+		//Album album = photo.getAlbum();
+		//album.setOwner();
+		//photo.setAlbum(this.em.merge(this.em.merge(album)));
 		UserTransaction transaction = (UserTransaction)new InitialContext().lookup("java:comp/UserTransaction");
-		this.em.persist(photo);
 		try {
-			transaction.commit();
-		} catch (SecurityException e) {
+			transaction.begin();
+		} catch (NotSupportedException | SystemException e1) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (RollbackException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (HeuristicMixedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (HeuristicRollbackException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SystemException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e1.printStackTrace();
 		}
-		
+		this.em.persist(photo);
+		try 
+		{
+			transaction.commit();
+		} catch (SecurityException | IllegalStateException | RollbackException | HeuristicMixedException
+					| HeuristicRollbackException | SystemException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+		}
+	
 		//sparqlUpdateService.insertPicture(p);
 	}
 	
@@ -93,15 +91,47 @@ public class PhotoService implements PhotoServiceLocal {
 		return results;
 	}
 	
-	public void deletePhotoById(Long id) throws ServiceException {
+	public void deletePhotoById(Long id) throws ServiceException, NamingException {
 		Photo photo = this.em.find(Photo.class, id);
-		this.em.remove(photo);		
-		// sparqlDeleteService.deletePicture(picture);
+		UserTransaction transaction = (UserTransaction)new InitialContext().lookup("java:comp/UserTransaction");
+		try {
+			transaction.begin();
+		} catch (NotSupportedException | SystemException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		Photo photo1=this.em.merge(photo);
+		this.em.remove(photo1);		
+		
+		try 
+		{
+			transaction.commit();
+		} catch (SecurityException | IllegalStateException | RollbackException | HeuristicMixedException
+					| HeuristicRollbackException | SystemException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+		}
+		
 	}
 	
-	public void deletePhoto(Photo photo) {
+	public void deletePhoto(Photo photo) throws NamingException {
 		
-		this.em.remove(photo);		
+		UserTransaction transaction = (UserTransaction)new InitialContext().lookup("java:comp/UserTransaction");
+		try {
+			transaction.begin();
+		} catch (NotSupportedException | SystemException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		this.em.remove(photo);
+		try 
+		{
+			transaction.commit();
+		} catch (SecurityException | IllegalStateException | RollbackException | HeuristicMixedException
+					| HeuristicRollbackException | SystemException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+		}
 		// sparqlDeleteService.deletePicture(picture);
 	}
 
