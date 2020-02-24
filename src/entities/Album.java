@@ -38,7 +38,6 @@ public class Album implements Serializable {
 	
 	private String description;
 	
-	@NotNull
 	@ManyToOne
 	private Utilisateur proprietaire;
 	

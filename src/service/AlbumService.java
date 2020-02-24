@@ -141,5 +141,12 @@ public class AlbumService implements AlbumServiceLocal {
 		long nombre= (long) query.getSingleResult();
 		return nombre;
 	}
+	
+	public List<Album> publicAlbum() {
+		
+		Query query = this.em.createQuery("SELECT a FROM Album a WHERE a.proprietaire IS NULL");
+		//query.setParameter("prop", null);
+		return query.getResultList();
+	}
 
 }

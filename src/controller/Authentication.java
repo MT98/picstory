@@ -52,6 +52,9 @@ public class Authentication extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}else if (requestedUrl.endsWith("/logout"))
+		{
+			
 		}
 	}
 }

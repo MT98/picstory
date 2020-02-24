@@ -18,8 +18,8 @@
 
       <section class="jumbotron text-center">
         <div class="container">
-          <h1 class="jumbotron-heading">Album example</h1>
-          <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don't simply skip over it entirely.</p>
+          <h1 class="jumbotron-heading">Site Album</h1>
+          <p class="lead text-muted">Decouvrez nos albums photos. Connectez vous pour créer votre propre album.</p>
           <p>
             <a href="<c:url value='/albums/add'/>" class="btn btn-primary my-2">Ajouter Album</a>
             <a href="<c:url value='/images/add'/>" class="btn btn-secondary my-2">Ajouter Photo</a>

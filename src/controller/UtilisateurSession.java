@@ -55,9 +55,11 @@ public class UtilisateurSession implements UtilisateurSessionLocal {
 	}
 	
 	public void logout(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServiceException {
-		FacesContext context = FacesContext.getCurrentInstance();
-		((HttpSession) context.getExternalContext().getSession(false)).invalidate();
+		
+		
 		connectedUser=null;
+		HttpSession session = request.getSession();
+		session.invalidate();
 		response.sendRedirect("/login");
 	}
 	

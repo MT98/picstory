@@ -27,5 +27,6 @@ public interface AlbumServiceLocal {
 	public List<Album> listAlbumSharedWith(Utilisateur utilisateur) ;
 	
 	public long nombrePhotoAlbum(Album album);
+	public List<Album> publicAlbum();
 
 }
