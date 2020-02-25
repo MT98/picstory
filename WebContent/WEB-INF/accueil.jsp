@@ -67,13 +67,13 @@
 	          
 	            <div class="col-md-4">
 	              <div class="card mb-4 box-shadow">
-	                <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&bg=55595c&fg=eceeef&text=Thumbnail" alt="Card image cap">
+	                <img class="card-img-top" src="assets/album2.jpg" alt="Card image cap">
 	                <div class="card-body">
 	                  <p class="card-text">${ album.description }</p>
 	                  <div class="d-flex justify-content-between align-items-center">
 	                    <div class="btn-group">
-	                      <a href="/albums/view?id=${album.id}" class="btn btn-primary">Visiter</a>
-	                      <a href="/albums/delete?id=${album.id}" class="btn btn-danger">Supprimer</a>
+	                      <a href="<c:url value='/albums/view?id=${album.id}'/>" class="btn btn-primary">Visiter</a>
+	                      <a href="<c:url value='/albums/delete?id=${album.id}'/>" class="btn btn-danger">Supprimer</a>
 	                    </div>
 	                    <small class="text-muted">9 mins</small>
 	                  </div>
